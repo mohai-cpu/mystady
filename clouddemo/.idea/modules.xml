@@ -7,6 +7,8 @@
       <module fileurl="file://$PROJECT_DIR$/eureka-server/eureka.iml" filepath="$PROJECT_DIR$/eureka-server/eureka.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka-client2/eureka-client2.iml" filepath="$PROJECT_DIR$/eureka-client2/eureka-client2.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka-ribbon-client/eureka-ribbon-client.iml" filepath="$PROJECT_DIR$/eureka-ribbon-client/eureka-ribbon-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../titan/titan.iml" filepath="$PROJECT_DIR$/../titan/titan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../titan/titan-api-commons/titan-api-commons.iml" filepath="$PROJECT_DIR$/../titan/titan-api-commons/titan-api-commons.iml" />
     </modules>
   </component>
 </project>

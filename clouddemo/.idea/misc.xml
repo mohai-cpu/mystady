@@ -8,7 +8,13 @@
         <option value="$PROJECT_DIR$/erueka-client/pom.xml" />
         <option value="$PROJECT_DIR$/eureka-client2/pom.xml" />
         <option value="$PROJECT_DIR$/eureka-ribbon-client/pom.xml" />
+        <option value="$PROJECT_DIR$/../titan/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../titan/titan-hello-consumer/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK">
