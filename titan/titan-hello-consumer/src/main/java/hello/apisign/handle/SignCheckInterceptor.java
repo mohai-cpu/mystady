@@ -1,8 +1,8 @@
 package hello.apisign.handle;
 
 import com.alibaba.fastjson.JSONObject;
-import com.taikang.common.Result;
-import com.taikang.hello.apisign.utils.SignUtil;
+import common.ReturnResult;
+import hello.apisign.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+/*import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;*/
 
 /**
  * @Description
@@ -39,14 +42,14 @@ public class SignCheckInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object obj) throws Exception {
-        Result result = new Result();
+        ReturnResult returnResult = new ReturnResult();
         boolean handleResult = false;
         //get请求
         Map<String, String[]> parameterMap = httpServletRequest.getParameterMap();
         if(parameterMap==null){
-            result.setCode(2001);
-            result.setMsg("请求参数为空");
-            returnJson(httpServletResponse,result);
+            returnResult.setCode(2001);
+            returnResult.setMsg("请求参数为空");
+            returnJson(httpServletResponse,returnResult);
             return handleResult;
         }
         logger.info("preHandle;请求参数parameterMap:{}",JSONObject.toJSONString(parameterMap));
@@ -62,9 +65,9 @@ public class SignCheckInterceptor implements HandlerInterceptor {
         String sign = stringMap.get("sign");
         logger.info("preHandle;请求参数accessKey:{};timestamp:{};nonce:{};sign:{}",accessKey,timestamp,nonce,sign);
         if(StringUtils.isAnyBlank(accessKey,timestamp,nonce,sign)){
-            result.setCode(2001);
-            result.setMsg("请求参数为空");
-            returnJson(httpServletResponse,result);
+            returnResult.setCode(2001);
+            returnResult.setMsg("请求参数为空");
+            returnJson(httpServletResponse,returnResult);
             return handleResult;
         }
         //添加密钥（不通过参数传递的）
@@ -74,15 +77,15 @@ public class SignCheckInterceptor implements HandlerInterceptor {
         long now = System.currentTimeMillis();//单位毫秒
         Long timeDiff = (now - Long.valueOf(timestamp))/1000;
         if (timeDiff > time) {
-            result.setCode(2002);
-            result.setMsg("请求发起时间超过服务器限制时间");
-            returnJson(httpServletResponse,result);
+            returnResult.setCode(2002);
+            returnResult.setMsg("请求发起时间超过服务器限制时间");
+            returnJson(httpServletResponse,returnResult);
             return handleResult;
         }
         if(redisTemplate.opsForHash().hasKey("third_key",accessKey+nonce)){
-            result.setCode(2003);
-            result.setMsg("请不要发送重复的请求");
-            returnJson(httpServletResponse,result);
+            returnResult.setCode(2003);
+            returnResult.setMsg("请不要发送重复的请求");
+            returnJson(httpServletResponse,returnResult);
             return handleResult;
         }else {
             //记录这次请求设置过期时间
@@ -95,9 +98,9 @@ public class SignCheckInterceptor implements HandlerInterceptor {
         logger.info("preHandle;新生成的mysign:{}",mysign);
         // 验证签名
         if (!mysign.equals(sign)) {
-            result.setCode(2004);
-            result.setMsg("签名信息错误");
-            returnJson(httpServletResponse,result);
+            returnResult.setCode(2004);
+            returnResult.setMsg("签名信息错误");
+            returnJson(httpServletResponse,returnResult);
             return handleResult;
         }
         handleResult = true;
@@ -113,7 +116,7 @@ public class SignCheckInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
 
     }
-    private void returnJson(HttpServletResponse response, Result result) {
+    private void returnJson(HttpServletResponse response, ReturnResult result) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
         PrintWriter writer = null;
